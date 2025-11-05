@@ -1,2 +1,16 @@
-redirect_to: https://www.youtube.com/watch?v=dQw4w9WgXcQ
-description: the cake is a lie
+title: "demaske"
+description: "the cake is a lie"
+
+# Thème par défaut GitHub Pages (optionnel)
+theme: minima
+
+# Activer le plugin de redirection
+plugins:
+  - jekyll-redirect-from
+
+# Réglages GitHub Pages
+markdown: kramdown
+highlighter: rouge
+
+# URL du site (optionnel mais propre)
+url: "https://demaske.github.io"
