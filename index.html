@@ -3,45 +3,278 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>The cake is a lie — demaske</title>
-    <meta name="description" content="A tiny Portal tribute — The cake is a lie. Click the cake.">
+    <title>The cake is a lie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
     <style>
-      :root{--bg:#0b0b10;--card:#0f1720;--accent:#f3c14f;--muted:#9aa4b2}
-      html,body{height:100%}
-      body{margin:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 10% 10%, #101318 0%, #07101a 35%, #03040a 100%), linear-gradient(180deg,#021024, #000);font-family:Inter,ui-sans-serif,system-ui,Arial;color:#fff}
-      .wrap{max-width:900px;padding:32px;text-align:center}
-      .card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(2,6,23,0.6);display:inline-block}
-      a.cake{display:inline-block;text-decoration:none;color:inherit}
-      .cake img{width:300px;height:auto;border-radius:12px;display:block;transition:transform .35s cubic-bezier(.2,.9,.3,1),filter .3s;box-shadow:0 18px 40px rgba(0,0,0,0.6);}
-      .cake:hover img{transform:translateY(-6px) scale(1.03) rotate(-1deg);filter:drop-shadow(0 10px 40px rgba(243,193,79,0.12))}
-      h1{font-size:clamp(20px,4.2vw,40px);margin:18px 0 6px;color:var(--accent);text-shadow:0 6px 18px rgba(243,193,79,0.06)}
-      p.lead{color:var(--muted);margin:0 0 12px}
-      .bouncy{display:inline-block;padding:10px 18px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px}
-      /* small particle-ish background using radial-gradients */
-      .bg-dots{position:fixed;inset:0;pointer-events:none;opacity:0.06;background-image:radial-gradient(circle at 10% 20%, rgba(243,193,79,0.6) 0 2px, transparent 3px), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.2) 0 1px, transparent 2px);background-size:400px 400px,200px 200px}
-      @media (max-width:420px){.cake img{width:220px}}
+      *{margin:0;padding:0;box-sizing:border-box}
+      html,body{height:100%;overflow:hidden}
+      body{
+        background:#0a0a0a;
+        font-family:monospace;
+        color:#fff;
+        position:relative;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      
+      /* Graffiti discret "the cake is a lie" en arrière-plan */
+      .graffiti{
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        z-index:1;
+        opacity:0.08;
+        font-family:'Special Elite',cursive;
+        font-size:clamp(18px,3vw,32px);
+        color:#888;
+        text-shadow:0 0 4px rgba(255,255,255,0.1);
+        display:flex;
+        flex-wrap:wrap;
+        align-items:center;
+        justify-content:space-around;
+        padding:20px;
+        transform:rotate(-2deg);
+        animation:subtleShift 20s ease-in-out infinite;
+      }
+      .graffiti span{
+        display:block;
+        margin:30px;
+        transform:rotate(calc(var(--r) * 1deg));
+        opacity:0.6;
+      }
+      @keyframes subtleShift{
+        0%,100%{transform:rotate(-2deg) translateX(0)}
+        50%{transform:rotate(-3deg) translateX(5px)}
+      }
+      
+      /* Portails animés */
+      .portal{
+        position:fixed;
+        border-radius:50%;
+        pointer-events:none;
+        z-index:2;
+        animation:portalPulse 4s ease-in-out infinite;
+        filter:blur(1px);
+      }
+      .portal.orange{
+        width:120px;
+        height:200px;
+        background:radial-gradient(ellipse, rgba(255,140,0,0.6) 0%, rgba(255,100,0,0.3) 40%, transparent 70%);
+        box-shadow:0 0 40px rgba(255,140,0,0.5), inset 0 0 30px rgba(255,80,0,0.4);
+        top:15%;
+        left:8%;
+        animation-delay:0s;
+      }
+      .portal.blue{
+        width:120px;
+        height:200px;
+        background:radial-gradient(ellipse, rgba(0,150,255,0.6) 0%, rgba(0,100,255,0.3) 40%, transparent 70%);
+        box-shadow:0 0 40px rgba(0,150,255,0.5), inset 0 0 30px rgba(0,100,255,0.4);
+        bottom:10%;
+        right:10%;
+        animation-delay:2s;
+      }
+      @keyframes portalPulse{
+        0%,100%{transform:scale(1) rotate(0deg);opacity:0.7}
+        50%{transform:scale(1.15) rotate(5deg);opacity:0.9}
+      }
+      
+      /* Particules flottantes */
+      .particles{
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        z-index:1;
+        overflow:hidden;
+      }
+      .particle{
+        position:absolute;
+        width:2px;
+        height:2px;
+        background:#fff;
+        border-radius:50%;
+        opacity:0.3;
+        animation:float 15s linear infinite;
+      }
+      @keyframes float{
+        0%{transform:translateY(100vh) translateX(0);opacity:0}
+        10%{opacity:0.4}
+        90%{opacity:0.2}
+        100%{transform:translateY(-10vh) translateX(calc(var(--dx) * 1px));opacity:0}
+      }
+      
+      /* Scanlines industrielles */
+      .scanlines{
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        z-index:5;
+        background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);
+        opacity:0.4;
+        animation:scanMove 8s linear infinite;
+      }
+      @keyframes scanMove{
+        0%{transform:translateY(0)}
+        100%{transform:translateY(4px)}
+      }
+      
+      /* Glitch overlay */
+      .glitch-overlay{
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        z-index:6;
+        opacity:0;
+        background:rgba(255,255,255,0.02);
+        animation:glitchFlash 7s ease-in-out infinite;
+      }
+      @keyframes glitchFlash{
+        0%,98%{opacity:0;transform:translateX(0)}
+        98.5%{opacity:0.6;transform:translateX(-5px)}
+        99%{opacity:0.3;transform:translateX(5px)}
+        100%{opacity:0;transform:translateX(0)}
+      }
+      
+      /* Gâteau au centre */
+      .cake-container{
+        position:relative;
+        z-index:10;
+        text-align:center;
+        animation:cakeDrift 6s ease-in-out infinite;
+      }
+      @keyframes cakeDrift{
+        0%,100%{transform:translateY(0) rotate(0deg)}
+        50%{transform:translateY(-8px) rotate(0.5deg)}
+      }
+      .cake-link{
+        display:inline-block;
+        text-decoration:none;
+        transition:transform 0.4s cubic-bezier(0.2,0.9,0.3,1), filter 0.3s;
+      }
+      .cake-link:hover{
+        transform:scale(1.08) rotate(-2deg);
+        filter:drop-shadow(0 0 30px rgba(255,140,0,0.4)) drop-shadow(0 0 50px rgba(0,150,255,0.3));
+      }
+      .cake-link img{
+        width:clamp(200px,40vw,400px);
+        height:auto;
+        display:block;
+        filter:drop-shadow(0 10px 40px rgba(0,0,0,0.8));
+        animation:cakeGlow 3s ease-in-out infinite alternate;
+      }
+      @keyframes cakeGlow{
+        0%{filter:drop-shadow(0 10px 40px rgba(0,0,0,0.8)) brightness(1)}
+        100%{filter:drop-shadow(0 15px 50px rgba(255,140,0,0.15)) brightness(1.05)}
+      }
+      
+      /* Éléments décoratifs industriels (coins/bords) */
+      .corner{
+        position:fixed;
+        width:80px;
+        height:80px;
+        border:2px solid rgba(255,255,255,0.08);
+        pointer-events:none;
+        z-index:3;
+      }
+      .corner.tl{top:20px;left:20px;border-right:none;border-bottom:none}
+      .corner.tr{top:20px;right:20px;border-left:none;border-bottom:none}
+      .corner.bl{bottom:20px;left:20px;border-right:none;border-top:none}
+      .corner.br{bottom:20px;right:20px;border-left:none;border-top:none}
+      
+      /* Vignette sombre */
+      .vignette{
+        position:fixed;
+        inset:0;
+        pointer-events:none;
+        z-index:4;
+        background:radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.6) 100%);
+      }
+      
+      /* Responsive */
+      @media (max-width:600px){
+        .portal{width:80px;height:140px}
+        .graffiti{font-size:16px}
+      }
     </style>
   </head>
   <body>
-    <div class="bg-dots" aria-hidden="true"></div>
-    <main class="wrap" role="main">
-      <div class="card">
-        <a class="cake" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="Click the cake" rel="noopener noreferrer" target="_blank">
-          <img src="https://i1.theportalwiki.net/img/thumb/0/0a/Portal_Cake.png/300px-Portal_Cake.png" alt="Portal cake — The cake is a lie">
-        </a>
-        <h1 class="bouncy">The cake is a lie</h1>
-        <p class="lead">Click the cake to find out more… (a tiny Portal tribute)</p>
-      </div>
+    <!-- Graffiti discret -->
+    <div class="graffiti" aria-hidden="true">
+      <span style="--r:-8">the cake is a lie</span>
+      <span style="--r:12">the cake is a lie</span>
+      <span style="--r:-5">the cake is a lie</span>
+      <span style="--r:7">the cake is a lie</span>
+      <span style="--r:-10">the cake is a lie</span>
+      <span style="--r:4">the cake is a lie</span>
+    </div>
+    
+    <!-- Portails -->
+    <div class="portal orange" aria-hidden="true"></div>
+    <div class="portal blue" aria-hidden="true"></div>
+    
+    <!-- Particules -->
+    <div class="particles" aria-hidden="true" id="particles"></div>
+    
+    <!-- Scanlines -->
+    <div class="scanlines" aria-hidden="true"></div>
+    
+    <!-- Glitch -->
+    <div class="glitch-overlay" aria-hidden="true"></div>
+    
+    <!-- Coins industriels -->
+    <div class="corner tl" aria-hidden="true"></div>
+    <div class="corner tr" aria-hidden="true"></div>
+    <div class="corner bl" aria-hidden="true"></div>
+    <div class="corner br" aria-hidden="true"></div>
+    
+    <!-- Vignette -->
+    <div class="vignette" aria-hidden="true"></div>
+    
+    <!-- Gâteau cliquable -->
+    <main class="cake-container" role="main">
+      <a class="cake-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" rel="noopener noreferrer" target="_blank">
+        <img src="https://i1.theportalwiki.net/img/thumb/0/0a/Portal_Cake.png/300px-Portal_Cake.png" alt="The cake">
+      </a>
     </main>
+    
     <script>
-      // Little flair: on click briefly animate the title
-      document.querySelector('.cake').addEventListener('click', function(){
-        const h = document.querySelector('h1');
-        h.animate([
-          {transform:'scale(1)', filter:'brightness(1)'},
-          {transform:'scale(1.08)', filter:'brightness(1.18)'},
-          {transform:'scale(1)', filter:'brightness(1)'}
-        ],{duration:420,easing:'cubic-bezier(.2,.8,.2,1)'});
+      // Génération de particules aléatoires
+      const particlesContainer = document.getElementById('particles');
+      for(let i=0; i<30; i++){
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random()*100 + '%';
+        p.style.setProperty('--dx', (Math.random()-0.5)*100);
+        p.style.animationDelay = Math.random()*15 + 's';
+        p.style.animationDuration = (10 + Math.random()*10) + 's';
+        particlesContainer.appendChild(p);
+      }
+      
+      // Glitch effect sur le cake au clic
+      document.querySelector('.cake-link').addEventListener('click', function(e){
+        const img = this.querySelector('img');
+        img.style.animation = 'none';
+        setTimeout(()=>{
+          img.style.animation = '';
+        },10);
+        // Flash glitch global
+        document.querySelector('.glitch-overlay').style.animation = 'none';
+        setTimeout(()=>{
+          document.querySelector('.glitch-overlay').style.animation = '';
+        },10);
+      });
+      
+      // Effet parallax léger sur les portails au mouvement de souris
+      document.addEventListener('mousemove', (e)=>{
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        document.querySelectorAll('.portal').forEach((portal,i)=>{
+          const factor = i%2===0 ? 1 : -1;
+          portal.style.transform = `translate(${x*factor}px, ${y*factor}px) scale(${i%2===0?1:1.15})`;
+        });
       });
     </script>
   </body>
