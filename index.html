@@ -1,412 +1,882 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>The cake is a lie</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
-    <style>
-      *{margin:0;padding:0;box-sizing:border-box}
-      html,body{height:100%;overflow:hidden}
-      body{
-        background:#0a0a0a;
-        font-family:monospace;
-        color:#fff;
-        position:relative;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-      }
-      
-      /* Graffiti discret "the cake is a lie" en arrière-plan */
-      .graffiti{
-        position:fixed;
-        inset:0;
-        pointer-events:none;
-        z-index:1;
-        opacity:0.08;
-        font-family:'Special Elite',cursive;
-        font-size:clamp(18px,3vw,32px);
-        color:#888;
-        text-shadow:0 0 4px rgba(255,255,255,0.1);
-        display:flex;
-        flex-wrap:wrap;
-        align-items:center;
-        justify-content:space-around;
-        padding:20px;
-        transform:rotate(-2deg);
-        animation:subtleShift 20s ease-in-out infinite;
-      }
-      .graffiti span{
-        display:block;
-        margin:30px;
-        transform:rotate(calc(var(--r) * 1deg));
-        opacity:0.6;
-      }
-      @keyframes subtleShift{
-        0%,100%{transform:rotate(-2deg) translateX(0)}
-        50%{transform:rotate(-3deg) translateX(5px)}
-      }
-      
-      /* Portails animés améliorés */
-      .portal{
-        position:fixed;
-        pointer-events:none;
-        z-index:2;
-      }
-      .portal.orange{
-        width:180px;
-        height:280px;
-        top:12%;
-        left:6%;
-      }
-      .portal.blue{
-        width:180px;
-        height:280px;
-        bottom:8%;
-        right:8%;
-      }
-      /* Cercles concentriques du portail */
-      .portal::before,
-      .portal::after{
-        content:'';
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%,-50%);
-        border-radius:50%;
-      }
-      .portal::before{
-        width:100%;
-        height:100%;
-        animation:portalRotate 8s linear infinite;
-      }
-      .portal::after{
-        width:80%;
-        height:80%;
-        animation:portalRotate 6s linear infinite reverse;
-      }
-      .portal.orange::before{
-        background:radial-gradient(ellipse, rgba(255,140,0,0.8) 0%, rgba(255,100,0,0.5) 30%, transparent 65%);
-        box-shadow:0 0 60px rgba(255,140,0,0.6), inset 0 0 40px rgba(255,80,0,0.5);
-      }
-      .portal.orange::after{
-        background:radial-gradient(ellipse, rgba(255,180,0,0.6) 0%, rgba(255,120,0,0.3) 35%, transparent 60%);
-        box-shadow:0 0 40px rgba(255,140,0,0.4);
-      }
-      .portal.blue::before{
-        background:radial-gradient(ellipse, rgba(0,150,255,0.8) 0%, rgba(0,100,255,0.5) 30%, transparent 65%);
-        box-shadow:0 0 60px rgba(0,150,255,0.6), inset 0 0 40px rgba(0,100,255,0.5);
-      }
-      .portal.blue::after{
-        background:radial-gradient(ellipse, rgba(100,180,255,0.6) 0%, rgba(0,120,255,0.3) 35%, transparent 60%);
-        box-shadow:0 0 40px rgba(0,150,255,0.4);
-      }
-      @keyframes portalRotate{
-        0%{transform:translate(-50%,-50%) rotate(0deg) scale(1)}
-        50%{transform:translate(-50%,-50%) rotate(180deg) scale(1.1)}
-        100%{transform:translate(-50%,-50%) rotate(360deg) scale(1)}
-      }
-      
-      /* Particules flottantes améliorées */
-      .particles{
-        position:fixed;
-        inset:0;
-        pointer-events:none;
-        z-index:1;
-        overflow:hidden;
-      }
-      .particle{
-        position:absolute;
-        border-radius:50%;
-        opacity:0.4;
-        animation:float 15s linear infinite;
-      }
-      .particle.small{
-        width:1px;
-        height:1px;
-        background:#fff;
-        box-shadow:0 0 2px rgba(255,255,255,0.3);
-      }
-      .particle.medium{
-        width:3px;
-        height:3px;
-        background:rgba(255,255,255,0.8);
-        box-shadow:0 0 4px rgba(255,255,255,0.4);
-      }
-      .particle.large{
-        width:4px;
-        height:4px;
-        background:rgba(255,255,255,0.9);
-        box-shadow:0 0 6px rgba(255,255,255,0.5), 0 0 10px rgba(255,255,255,0.2);
-      }
-      .particle.orange-glow{
-        background:rgba(255,140,0,0.6);
-        box-shadow:0 0 8px rgba(255,140,0,0.6);
-      }
-      .particle.blue-glow{
-        background:rgba(0,150,255,0.6);
-        box-shadow:0 0 8px rgba(0,150,255,0.6);
-      }
-      @keyframes float{
-        0%{transform:translateY(100vh) translateX(0) rotate(0deg);opacity:0}
-        5%{opacity:0.5}
-        95%{opacity:0.3}
-        100%{transform:translateY(-10vh) translateX(calc(var(--dx) * 1px)) rotate(360deg);opacity:0}
-      }
-      
-      /* Scanlines industrielles */
-      .scanlines{
-        position:fixed;
-        inset:0;
-        pointer-events:none;
-        z-index:5;
-        background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);
-        opacity:0.3;
-      }
-      
-      /* Poutres et structures industrielles */
-      .beam{
-        position:fixed;
-        background:linear-gradient(90deg, rgba(40,40,40,0.8) 0%, rgba(60,60,60,0.9) 50%, rgba(40,40,40,0.8) 100%);
-        pointer-events:none;
-        z-index:7;
-        box-shadow:0 0 20px rgba(0,0,0,0.8), inset 0 2px 4px rgba(255,255,255,0.05);
-      }
-      .beam.horizontal{
-        width:100%;
-        height:40px;
-      }
-      .beam.vertical{
-        width:40px;
-        height:100%;
-      }
-      .beam.top{top:0}
-      .beam.bottom{bottom:0}
-      .beam.left{left:0}
-      .beam.right{right:0}
-      /* Rivets sur les poutres */
-      .beam::before,
-      .beam::after{
-        content:'';
-        position:absolute;
-        width:8px;
-        height:8px;
-        background:radial-gradient(circle, rgba(80,80,80,0.9) 0%, rgba(50,50,50,0.8) 100%);
-        border-radius:50%;
-        box-shadow:inset 0 1px 2px rgba(0,0,0,0.5), 0 1px 1px rgba(255,255,255,0.1);
-      }
-      .beam.horizontal::before{top:50%;left:5%;transform:translateY(-50%)}
-      .beam.horizontal::after{top:50%;right:5%;transform:translateY(-50%)}
-      .beam.vertical::before{left:50%;top:5%;transform:translateX(-50%)}
-      .beam.vertical::after{left:50%;bottom:5%;transform:translateX(-50%)}
-      
-      /* Ombres portées des poutres */
-      .beam-shadow{
-        position:fixed;
-        pointer-events:none;
-        z-index:6;
-        opacity:0.6;
-      }
-      .beam-shadow.top{
-        top:40px;
-        left:0;
-        width:100%;
-        height:30px;
-        background:linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-      }
-      .beam-shadow.bottom{
-        bottom:40px;
-        left:0;
-        width:100%;
-        height:30px;
-        background:linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-      }
-      .beam-shadow.left{
-        left:40px;
-        top:0;
-        width:30px;
-        height:100%;
-        background:linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-      }
-      .beam-shadow.right{
-        right:40px;
-        top:0;
-        width:30px;
-        height:100%;
-        background:linear-gradient(270deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-      }
-      
-      /* Gâteau au centre */
-      .cake-container{
-        position:relative;
-        z-index:10;
-        text-align:center;
-        animation:cakeDrift 6s ease-in-out infinite;
-        transition:transform 0.2s ease-out;
-      }
-      @keyframes cakeDrift{
-        0%,100%{transform:translateY(0) rotate(0deg)}
-        50%{transform:translateY(-8px) rotate(0.5deg)}
-      }
-      .cake-link{
-        display:inline-block;
-        text-decoration:none;
-        transition:transform 0.4s cubic-bezier(0.2,0.9,0.3,1), filter 0.3s;
-      }
-      .cake-link:hover{
-        transform:scale(1.08) rotate(-2deg);
-        filter:drop-shadow(0 0 30px rgba(255,140,0,0.4)) drop-shadow(0 0 50px rgba(0,150,255,0.3));
-      }
-      .cake-link img{
-        width:clamp(200px,40vw,400px);
-        height:auto;
-        display:block;
-        filter:drop-shadow(0 10px 40px rgba(0,0,0,0.8));
-        animation:cakeGlow 3s ease-in-out infinite alternate;
-      }
-      @keyframes cakeGlow{
-        0%{filter:drop-shadow(0 10px 40px rgba(0,0,0,0.8)) brightness(1)}
-        100%{filter:drop-shadow(0 15px 50px rgba(255,140,0,0.15)) brightness(1.05)}
-      }
-      
-      /* Éléments décoratifs industriels (coins/bords) */
-      .corner{
-        position:fixed;
-        width:80px;
-        height:80px;
-        border:2px solid rgba(255,255,255,0.08);
-        pointer-events:none;
-        z-index:3;
-      }
-      .corner.tl{top:20px;left:20px;border-right:none;border-bottom:none}
-      .corner.tr{top:20px;right:20px;border-left:none;border-bottom:none}
-      .corner.bl{bottom:20px;left:20px;border-right:none;border-top:none}
-      .corner.br{bottom:20px;right:20px;border-left:none;border-top:none}
-      
-      /* Vignette sombre */
-      .vignette{
-        position:fixed;
-        inset:0;
-        pointer-events:none;
-        z-index:4;
-        background:radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.6) 100%);
-      }
-      
-      /* Responsive */
-      @media (max-width:600px){
-        .portal{width:80px;height:140px}
-        .graffiti{font-size:16px}
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Graffiti discret -->
-    <div class="graffiti" aria-hidden="true">
-      <span style="--r:-8">the cake is a lie</span>
-      <span style="--r:12">the cake is a lie</span>
-      <span style="--r:-5">the cake is a lie</span>
-      <span style="--r:7">the cake is a lie</span>
-      <span style="--r:-10">the cake is a lie</span>
-      <span style="--r:4">the cake is a lie</span>
-    </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The cake is a lie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     
-    <!-- Portails -->
-    <div class="portal orange" aria-hidden="true"></div>
-    <div class="portal blue" aria-hidden="true"></div>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      cursor: none;
+    }
     
-    <!-- Poutres industrielles -->
-    <div class="beam horizontal top" aria-hidden="true"></div>
-    <div class="beam horizontal bottom" aria-hidden="true"></div>
-    <div class="beam vertical left" aria-hidden="true"></div>
-    <div class="beam vertical right" aria-hidden="true"></div>
+    body {
+      background: #0d0d0d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      color: white;
+      position: relative;
+      perspective: 1000px;
+    }
     
-    <!-- Ombres des poutres -->
-    <div class="beam-shadow top" aria-hidden="true"></div>
-    <div class="beam-shadow bottom" aria-hidden="true"></div>
-    <div class="beam-shadow left" aria-hidden="true"></div>
-    <div class="beam-shadow right" aria-hidden="true"></div>
+    #custom-cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 140, 0, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease-out, border-color 0.2s;
+      box-shadow: 0 0 10px rgba(255, 140, 0, 0.5), inset 0 0 5px rgba(255, 140, 0, 0.3);
+    }
     
-    <!-- Particules -->
-    <div class="particles" aria-hidden="true" id="particles"></div>
+    #custom-cursor.grab {
+      border-color: rgba(0, 150, 255, 1);
+      box-shadow: 0 0 20px rgba(0, 150, 255, 0.8), inset 0 0 10px rgba(0, 150, 255, 0.5);
+      transform: scale(1.5);
+    }
     
-    <!-- Scanlines -->
-    <div class="scanlines" aria-hidden="true"></div>
+    .bg-layer {
+      position: fixed;
+      inset: -10%;
+      background: url('https://images.alphacoders.com/633/thumb-1920-633148.jpg') center/cover;
+      filter: brightness(0.3) contrast(1.2) grayscale(0.2);
+      z-index: 0;
+      transition: transform 0.1s ease-out, filter 0.3s ease-out;
+      will-change: transform;
+    }
     
-    <!-- Coins industriels -->
-    <div class="corner tl" aria-hidden="true"></div>
-    <div class="corner tr" aria-hidden="true"></div>
-    <div class="corner bl" aria-hidden="true"></div>
-    <div class="corner br" aria-hidden="true"></div>
+    .graffiti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.06;
+      font-family: 'Special Elite', cursive;
+      font-size: clamp(20px, 3.5vw, 36px);
+      color: #999;
+      text-shadow: 0 0 8px rgba(200, 200, 200, 0.15);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-around;
+      padding: 40px;
+      transform: rotate(-2deg);
+      transition: transform 0.15s ease-out;
+      will-change: transform;
+    }
     
-    <!-- Vignette -->
-    <div class="vignette" aria-hidden="true"></div>
+    .graffiti span {
+      display: block;
+      margin: 40px;
+      opacity: 0.7;
+      animation: subtleGlow 4s ease-in-out infinite;
+      animation-delay: calc(var(--i) * 0.3s);
+    }
     
-    <!-- Gâteau cliquable -->
-    <main class="cake-container" role="main">
-      <a class="cake-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" rel="noopener noreferrer" target="_blank">
-        <img src="https://i1.theportalwiki.net/img/thumb/0/0a/Portal_Cake.png/300px-Portal_Cake.png" alt="The cake">
-      </a>
-    </main>
+    @keyframes subtleGlow {
+      0%, 100% { text-shadow: 0 0 8px rgba(200, 200, 200, 0.15); }
+      50% { text-shadow: 0 0 15px rgba(200, 200, 200, 0.25); }
+    }
     
-    <script>
-      // Génération de particules améliorées avec variété
-      const particlesContainer = document.getElementById('particles');
-      const particleTypes = ['small', 'small', 'small', 'medium', 'medium', 'large'];
-      const glowTypes = ['', '', '', 'orange-glow', 'blue-glow'];
+    .portal-real {
+      position: fixed;
+      pointer-events: none;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.9;
+      z-index: 3;
+      transition: transform 0.15s ease-out;
+      will-change: transform;
+    }
+    
+    .portal-real.orange {
+      width: 180px;
+      height: 500px;
+      top: 5%;
+      left: 8%;
+      background-image: url('https://freepngimg.com/save/27577-portal-transparent-image/1191x670');
+      filter: drop-shadow(0 0 40px rgba(255, 140, 0, 0.7)) brightness(1.4);
+      animation: portalPulseOrange 2.5s ease-in-out infinite;
+    }
+    
+    @keyframes portalPulseOrange {
+      0%, 100% {
+        opacity: 0.85;
+        filter: drop-shadow(0 0 40px rgba(255, 140, 0, 0.7)) brightness(1.4);
+      }
+      50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 60px rgba(255, 140, 0, 0.9)) brightness(1.6);
+      }
+    }
+    
+    .portal-real.blue {
+      width: 180px;
+      height: 500px;
+      bottom: 5%;
+      right: 8%;
+      background-image: url('https://freepngimg.com/save/27576-portal-file/1191x670');
+      filter: drop-shadow(0 0 40px rgba(0, 150, 255, 0.7)) brightness(1.4);
+      animation: portalPulseBlue 2.7s ease-in-out infinite;
+    }
+    
+    @keyframes portalPulseBlue {
+      0%, 100% {
+        opacity: 0.85;
+        filter: drop-shadow(0 0 40px rgba(0, 150, 255, 0.7)) brightness(1.4);
+      }
+      50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 60px rgba(0, 150, 255, 0.9)) brightness(1.6);
+      }
+    }
+    
+    .turret {
+      position: fixed;
+      width: 120px;
+      height: 160px;
+      bottom: 15%;
+      left: 20%;
+      background-image: url('https://i1.theportalwiki.net/img/1/15/Portal2_Turret_Standard.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: 4;
+      opacity: 0.85;
+      animation: turretFloat 3.5s ease-in-out infinite;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+      transition: transform 0.15s ease-out, filter 0.3s;
+      will-change: transform;
+    }
+    
+    @keyframes turretFloat {
+      0%, 100% {
+        transform: translateY(0px) rotate(-1deg);
+        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+      }
+      50% {
+        transform: translateY(-12px) rotate(1deg);
+        filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 30px rgba(255, 0, 0, 0.6));
+      }
+    }
+    
+    .turret.alert {
+      animation: turretAlert 0.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 40px rgba(255, 0, 0, 1)) brightness(1.2);
+    }
+    
+    @keyframes turretAlert {
+      0%, 100% { transform: translateX(-3px) rotate(-3deg); }
+      50% { transform: translateX(3px) rotate(3deg); }
+    }
+    
+    .cube {
+      position: fixed;
+      width: 100px;
+      height: 100px;
+      top: 20%;
+      right: 25%;
+      background-image: url('https://i1.theportalwiki.net/img/d/d2/Portal2_StorageCube.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: 12;
+      opacity: 0.9;
+      filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.7));
+      transition: transform 0.05s ease-out, filter 0.2s;
+      will-change: transform;
+      user-select: none;
+      cursor: grab;
+    }
+    
+    .cube.dragging {
+      cursor: grabbing;
+      z-index: 100;
+      filter: drop-shadow(0 0 40px rgba(0, 150, 255, 0.8)) brightness(1.3);
+      opacity: 1;
+    }
+    
+    .cube.bouncing {
+      animation: cubeBounce 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    @keyframes cubeBounce {
+      0% { transform: scale(1) rotate(0deg); }
+      20% { transform: scale(0.85, 1.15) rotate(8deg); }
+      40% { transform: scale(1.1, 0.9) rotate(-8deg); }
+      60% { transform: scale(0.95, 1.05) rotate(5deg); }
+      80% { transform: scale(1.02, 0.98) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    .cube.teleporting {
+      animation: cubeTeleport 0.3s ease-out;
+    }
+    
+    @keyframes cubeTeleport {
+      0% { 
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.7));
+      }
+      50% { 
+        transform: scale(0.3) rotate(180deg);
+        filter: drop-shadow(0 0 50px rgba(0, 150, 255, 1)) brightness(2);
+        opacity: 0.5;
+      }
+      100% { 
+        transform: scale(1) rotate(360deg);
+        filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.7));
+      }
+    }
+    
+    .turret.teleporting {
+      animation: turretTeleport 0.3s ease-out;
+    }
+    
+    @keyframes turretTeleport {
+      0% { 
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+      }
+      50% { 
+        transform: scale(0.3) rotate(180deg);
+        filter: drop-shadow(0 0 50px rgba(255, 140, 0, 1)) brightness(2);
+        opacity: 0.5;
+      }
+      100% { 
+        transform: scale(1) rotate(360deg);
+        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+      }
+    }
+    
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: float 18s linear infinite;
+    }
+    
+    .particle.small {
+      width: 2px;
+      height: 2px;
+      background: #ccc;
+      box-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
+    }
+    
+    .particle.medium {
+      width: 3px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    
+    .particle.large {
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+    
+    .particle.orange-glow {
+      background: rgba(255, 140, 0, 0.7);
+      box-shadow: 0 0 12px rgba(255, 140, 0, 0.8);
+    }
+    
+    .particle.blue-glow {
+      background: rgba(0, 150, 255, 0.7);
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.8);
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(110vh) translateX(0) rotate(0deg) scale(0.5);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-10vh) translateX(calc(var(--dx) * 1px)) rotate(720deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+    
+    .vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      background: radial-gradient(ellipse at center, transparent 20%, rgba(0, 0, 0, 0.7) 100%);
+    }
+    
+    .cake-container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      transition: transform 0.15s ease-out;
+      animation: cakeDrift 4s ease-in-out infinite;
+      will-change: transform;
+    }
+    
+    @keyframes cakeDrift {
+      0%, 100% {
+        transform: translateY(0px) scale(1);
+      }
+      50% {
+        transform: translateY(-15px) scale(1.02);
+      }
+    }
+    
+    .cake-link {
+      display: inline-block;
+      text-decoration: none;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+      cursor: pointer;
+    }
+    
+    .cake-link:hover {
+      transform: scale(1.2) rotate(-5deg);
+      filter: drop-shadow(0 0 60px rgba(255, 140, 0, 1)) drop-shadow(0 0 90px rgba(0, 150, 255, 0.8));
+    }
+    
+    .cake-link img {
+      width: 400px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 15px 50px rgba(0, 0, 0, 0.9));
+      animation: cakeBreath 3s ease-in-out infinite;
+    }
+    
+    @keyframes cakeBreath {
+      0%, 100% {
+        filter: drop-shadow(0 15px 50px rgba(0, 0, 0, 0.9)) brightness(1);
+      }
+      50% {
+        filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.95)) brightness(1.1);
+      }
+    }
+    
+    /* Particules avec profondeur - SUPPRIMÉ */
+  </style>
+</head>
+<body>
+  <div id="custom-cursor"></div>
+  <div class="bg-layer"></div>
+  
+  <div class="graffiti">
+    <span style="--i:0">the cake is a lie</span>
+    <span style="--i:1">the cake is a lie</span>
+    <span style="--i:2">the cake is a lie</span>
+    <span style="--i:3">the cake is a lie</span>
+    <span style="--i:4">the cake is a lie</span>
+  </div>
+  
+  <div class="portal-real orange"></div>
+  <div class="portal-real blue"></div>
+  
+  <div class="turret"></div>
+  <div class="cube" id="cube"></div>
+  
+  <div class="particles" id="particles"></div>
+  
+  <div class="vignette"></div>
+  
+  <main class="cake-container">
+    <a class="cake-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">
+      <img src="https://i1.theportalwiki.net/img/thumb/0/0a/Portal_Cake.png/300px-Portal_Cake.png" alt="The cake">
+    </a>
+  </main>
+  
+  <script>
+    // Curseur personnalisé
+    const cursor = document.getElementById('custom-cursor');
+    let mouseX = 0, mouseY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.left = mouseX - 10 + 'px';
+      cursor.style.top = mouseY - 10 + 'px';
+    });
+    
+    // Génération des particules
+    const particlesContainer = document.getElementById('particles');
+    const particleTypes = ['small', 'small', 'small', 'medium', 'medium', 'large'];
+    const glowTypes = ['', '', '', 'orange-glow', 'blue-glow'];
+    
+    for (let i = 0; i < 80; i++) {
+      const p = document.createElement('div');
+      const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+      const glow = glowTypes[Math.floor(Math.random() * glowTypes.length)];
+      p.className = `particle ${type} ${glow}`;
+      p.style.left = Math.random() * 100 + '%';
+      p.style.setProperty('--dx', (Math.random() - 0.5) * 200);
+      p.style.animationDelay = Math.random() * 18 + 's';
+      p.style.animationDuration = (16 + Math.random() * 16) + 's';
+      particlesContainer.appendChild(p);
+    }
+    
+    // Physique du cube draggable - DÉCLARATION AVANT UTILISATION
+    const cube = document.getElementById('cube');
+    const turret = document.querySelector('.turret');
+    let isDragging = false;
+    let offsetX, offsetY;
+    let velocityX = 0, velocityY = 0;
+    let cubeX = 0, cubeY = 0;
+    const friction = 0.92;
+    const bounce = 0.85; // Plus élastique !
+    const gravity = 0.6;
+    let lastTeleportTime = 0;
+    const teleportCooldown = 2000; // 2 secondes de cooldown (augmenté)
+    // Flag pour éviter les conflits transform/left pendant la physique
+    let cubePhysicsActive = false;
+    
+    // Variables tourelle déclarées dès maintenant
+    let turretDragging = false;
+    let turretX = 0, turretY = 0;
+    let turretVelX = 0, turretVelY = 0;
+    let turretOffsetX, turretOffsetY;
+    let lastTurretTeleport = 0;
+    let turretPhysicsActive = false;    // Parallaxe 3D avancée
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+      targetX = (e.clientX / window.innerWidth - 0.5);
+      targetY = (e.clientY / window.innerHeight - 0.5);
+    });
+    
+    function updateParallax() {
+      currentX += (targetX - currentX) * 0.1;
+      currentY += (targetY - currentY) * 0.1;
       
-      for(let i=0; i<50; i++){
-        const p = document.createElement('div');
-        const type = particleTypes[Math.floor(Math.random()*particleTypes.length)];
-        const glow = glowTypes[Math.floor(Math.random()*glowTypes.length)];
-        p.className = `particle ${type} ${glow}`;
-        p.style.left = Math.random()*100 + '%';
-        p.style.setProperty('--dx', (Math.random()-0.5)*150);
-        p.style.animationDelay = Math.random()*15 + 's';
-        p.style.animationDuration = (12 + Math.random()*12) + 's';
-        particlesContainer.appendChild(p);
+      const bg = document.querySelector('.bg-layer');
+      if (bg) bg.style.transform = `translate(${currentX * 30}px, ${currentY * 30}px) scale(1.1)`;
+      
+      const graffiti = document.querySelector('.graffiti');
+      if (graffiti) graffiti.style.transform = `translate(${currentX * -15}px, ${currentY * -15}px) rotate(-2deg)`;
+      
+      const portalOrange = document.querySelector('.portal-real.orange');
+      if (portalOrange) portalOrange.style.transform = `translate(${currentX * -35}px, ${currentY * -35}px)`;
+      
+      const portalBlue = document.querySelector('.portal-real.blue');
+      if (portalBlue) portalBlue.style.transform = `translate(${currentX * -30}px, ${currentY * -30}px)`;
+      
+      const turret = document.querySelector('.turret');
+      if (turret && !turretDragging && !turretPhysicsActive) turret.style.transform = `translate(${currentX * 40}px, ${currentY * 40}px)`;
+      
+      // Ne bouge pas le cube pendant le drag ou la physique
+      if (cube) {
+        if (!isDragging && !cubePhysicsActive) {
+          cube.style.transform = `translate(${currentX * 25}px, ${currentY * 25}px)`;
+        } else if (cubePhysicsActive) {
+          // supprimer la transform parallax pendant la physique pour éviter les jumps
+          cube.style.transform = '';
+        }
       }
       
-      // Effet parallax sur les poutres, portails et gâteau au mouvement de souris
-      document.addEventListener('mousemove', (e)=>{
-        const x = (e.clientX / window.innerWidth - 0.5);
-        const y = (e.clientY / window.innerHeight - 0.5);
+      const cake = document.querySelector('.cake-container');
+      if (cake) cake.style.transform = `translate(${currentX * 18}px, ${currentY * 18}px)`;
+      
+      requestAnimationFrame(updateParallax);
+    }
+    
+    updateParallax();
+    
+    // Détection de collision avec les portails
+    function checkPortalCollision(obj, objRect) {
+      const portalOrange = document.querySelector('.portal-real.orange');
+      const portalBlue = document.querySelector('.portal-real.blue');
+      
+      if (portalOrange && portalBlue) {
+        const orangeRect = portalOrange.getBoundingClientRect();
+        const blueRect = portalBlue.getBoundingClientRect();
         
-        // Parallax portails (mouvement inverse pour profondeur)
-        document.querySelectorAll('.portal').forEach((portal,i)=>{
-          const factor = i%2===0 ? 15 : -15;
-          portal.style.transform = `translate(${x*factor}px, ${y*factor}px)`;
-        });
+        // Zone de téléportation réduite au centre du portail (taille du cube ~100px)
+        const portalZoneSize = 120; // Zone active réduite
         
-        // Parallax poutres (mouvement subtil)
-        document.querySelectorAll('.beam.horizontal').forEach(beam=>{
-          beam.style.transform = `translateX(${x*-8}px)`;
-        });
-        document.querySelectorAll('.beam.vertical').forEach(beam=>{
-          beam.style.transform = `translateY(${y*-8}px)`;
-        });
+        // Centre du portail orange avec zone réduite
+        const orangeZone = {
+          left: orangeRect.left + (orangeRect.width - portalZoneSize) / 2,
+          right: orangeRect.left + (orangeRect.width + portalZoneSize) / 2,
+          top: orangeRect.top + (orangeRect.height - portalZoneSize) / 2,
+          bottom: orangeRect.top + (orangeRect.height + portalZoneSize) / 2
+        };
         
-        // Parallax gâteau (léger mouvement)
-        const cake = document.querySelector('.cake-container');
-        cake.style.transform = `translate(${x*10}px, ${y*10}px)`;
+        // Centre du portail bleu avec zone réduite
+        const blueZone = {
+          left: blueRect.left + (blueRect.width - portalZoneSize) / 2,
+          right: blueRect.left + (blueRect.width + portalZoneSize) / 2,
+          top: blueRect.top + (blueRect.height - portalZoneSize) / 2,
+          bottom: blueRect.top + (blueRect.height + portalZoneSize) / 2
+        };
         
-        // Parallax graffiti
-        const graffiti = document.querySelector('.graffiti');
-        if(graffiti){
-          graffiti.style.transform = `translate(${x*-5}px, ${y*-5}px) rotate(-2deg)`;
+        // Collision avec portail orange -> téléporte au bleu
+        if (isColliding(objRect, orangeZone)) {
+          return { portal: 'orange', target: blueRect };
+        }
+        
+        // Collision avec portail bleu -> téléporte à l'orange
+        if (isColliding(objRect, blueZone)) {
+          return { portal: 'blue', target: orangeRect };
+        }
+      }
+      
+      return null;
+    }
+    
+    function isColliding(rect1, rect2) {
+      return !(rect1.right < rect2.left || 
+               rect1.left > rect2.right || 
+               rect1.bottom < rect2.top || 
+               rect1.top > rect2.bottom);
+    }
+    
+    function teleportObject(obj, targetRect, isFromOrange) {
+      obj.classList.add('teleporting');
+      
+      // Position au centre du portail de destination
+      const centerX = targetRect.left + targetRect.width / 2 - obj.offsetWidth / 2;
+      const centerY = targetRect.top + targetRect.height / 2 - obj.offsetHeight / 2;
+      
+      // Petit décalage pour sortir de la zone de téléportation (120px)
+      const exitOffset = 80;
+      let newX, newY;
+      
+      if (obj === cube) {
+        // isFromOrange = true signifie qu'on entre dans ORANGE et on sort du BLEU
+        // Le portail ORANGE est en HAUT (top: 5%)
+        // Le portail BLEU est en BAS (bottom: 5%)
+        
+        if (isFromOrange) {
+          // Entre dans ORANGE (haut) -> Sort du BLEU (bas)
+          // On doit sortir du portail BLEU qui est EN BAS
+          // Donc on sort vers le BAS du portail bleu et on TOMBE
+          newX = centerX;
+          newY = centerY + exitOffset; // Sort en dessous du centre
+          velocityY = 8; // Force VERS LE BAS (toujours positif)
+          velocityX *= 0.7;
+        } else {
+          // Entre dans BLEU (bas) -> Sort de ORANGE (haut)
+          // On doit sortir du portail ORANGE qui est EN HAUT
+          // Donc on sort vers le HAUT du portail orange et on MONTE puis retombe
+          newX = centerX;
+          newY = centerY - exitOffset; // Sort au-dessus du centre
+          velocityY = -8; // Force VERS LE HAUT (toujours négatif)
+          velocityX *= 0.7;
+        }
+        
+        cubeX = newX;
+        cubeY = newY;
+        obj.style.left = cubeX + 'px';
+        obj.style.top = cubeY + 'px';
+        
+        lastTeleportTime = Date.now();
+      } else if (obj === turret) {
+        if (isFromOrange) {
+          newX = centerX;
+          newY = centerY + exitOffset;
+          turretVelY = 8; // Force vers le bas
+          turretVelX *= 0.7;
+        } else {
+          newX = centerX;
+          newY = centerY - exitOffset;
+          turretVelY = -8; // Force vers le haut
+          turretVelX *= 0.7;
+        }
+        
+        turretX = newX;
+        turretY = newY;
+        obj.style.left = turretX + 'px';
+        obj.style.top = turretY + 'px';
+        
+        lastTurretTeleport = Date.now();
+      }
+      
+      setTimeout(() => obj.classList.remove('teleporting'), 300);
+    }
+    
+    // Animation alerte tourelle quand cube proche
+    function checkTurretAlert() {
+      if (!cube || !turret) return;
+      
+      const cubeRect = cube.getBoundingClientRect();
+      const turretRect = turret.getBoundingClientRect();
+      
+      const distance = Math.hypot(
+        cubeRect.left - turretRect.left,
+        cubeRect.top - turretRect.top
+      );
+      
+      if (distance < 200) {
+        turret.classList.add('alert');
+      } else {
+        turret.classList.remove('alert');
+      }
+    }
+    
+    cube.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      cube.classList.add('dragging');
+      cursor.classList.add('grab');
+      const rect = cube.getBoundingClientRect();
+      offsetX = e.clientX - rect.left - rect.width / 2;
+      offsetY = e.clientY - rect.top - rect.height / 2;
+      velocityX = 0;
+      velocityY = 0;
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const newX = e.clientX - offsetX - cube.offsetWidth / 2;
+        const newY = e.clientY - offsetY - cube.offsetHeight / 2;
+        
+        velocityX = newX - cubeX;
+        velocityY = newY - cubeY;
+        
+        cubeX = newX;
+        cubeY = newY;
+        
+        cube.style.left = cubeX + 'px';
+        cube.style.top = cubeY + 'px';
+        cube.style.right = 'auto';
+      }
+    });
+    
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        cube.classList.remove('dragging');
+        cursor.classList.remove('grab');
+        
+        // Lancer le cube avec physique
+        cubePhysicsActive = true;
+        animateCubePhysics();
+      }
+    });
+    
+    function animateCubePhysics() {
+      if (isDragging) return;
+      cubePhysicsActive = true;
+      
+      velocityX *= friction;
+      velocityY *= friction;
+      velocityY += gravity; // Gravité
+      
+      cubeX += velocityX;
+      cubeY += velocityY;
+      
+      // Vérifier téléportation via portail (avec cooldown !)
+      const now = Date.now();
+      if (now - lastTeleportTime > teleportCooldown) {
+        const cubeRect = cube.getBoundingClientRect();
+        const portalHit = checkPortalCollision(cube, cubeRect);
+        
+        if (portalHit) {
+          teleportObject(cube, portalHit.target, portalHit.portal === 'orange');
+        }
+      }
+      
+      // Vérifier alerte tourelle
+      checkTurretAlert();
+      
+      // Collisions avec les bords - Plus élastiques !
+      const maxX = window.innerWidth - cube.offsetWidth;
+      const maxY = window.innerHeight - cube.offsetHeight;
+      
+      let bounced = false;
+      
+      if (cubeX < 0) {
+        cubeX = 0;
+        velocityX *= -bounce;
+        bounced = true;
+      }
+      if (cubeX > maxX) {
+        cubeX = maxX;
+        velocityX *= -bounce;
+        bounced = true;
+      }
+      if (cubeY < 0) {
+        cubeY = 0;
+        velocityY *= -bounce;
+        bounced = true;
+      }
+      if (cubeY > maxY) {
+        cubeY = maxY;
+        velocityY *= -bounce;
+        bounced = true;
+        
+        // Rebonds multiples au sol
+        if (Math.abs(velocityY) < 2) {
+          velocityY = 0;
+          velocityX *= 0.8;
+        }
+      }
+      
+      if (bounced) {
+        cube.classList.add('bouncing');
+        setTimeout(() => cube.classList.remove('bouncing'), 400);
+      }
+      
+      cube.style.left = cubeX + 'px';
+      cube.style.top = cubeY + 'px';
+      
+      // Continuer l'animation si le cube bouge encore
+      if (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1 || cubeY < maxY - 1) {
+        requestAnimationFrame(animateCubePhysics);
+      } else {
+        // Fin de la physique
+        cubePhysicsActive = false;
+      }
+    }
+    
+    // Initialiser la position du cube
+    const rect = cube.getBoundingClientRect();
+    cubeX = rect.left;
+    cubeY = rect.top;
+    
+    // Rendre la tourelle draggable aussi !
+    if (turret) {
+      const turretRect = turret.getBoundingClientRect();
+      turretX = turretRect.left;
+      turretY = turretRect.top;
+      
+      turret.addEventListener('mousedown', (e) => {
+        turretDragging = true;
+        cursor.classList.add('grab');
+        const rect = turret.getBoundingClientRect();
+        turretOffsetX = e.clientX - rect.left - rect.width / 2;
+        turretOffsetY = e.clientY - rect.top - rect.height / 2;
+        turretVelX = 0;
+        turretVelY = 0;
+        turret.style.animation = 'none';
+        turret.style.position = 'fixed';
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (turretDragging) {
+          const newX = e.clientX - turretOffsetX - turret.offsetWidth / 2;
+          const newY = e.clientY - turretOffsetY - turret.offsetHeight / 2;
+          
+          turretVelX = newX - turretX;
+          turretVelY = newY - turretY;
+          
+          turretX = newX;
+          turretY = newY;
+          
+          turret.style.left = turretX + 'px';
+          turret.style.top = turretY + 'px';
+          turret.style.bottom = 'auto';
         }
       });
       
-      // Animation au clic du cake (sans glitch flash)
-      document.querySelector('.cake-link').addEventListener('click', function(e){
-        const img = this.querySelector('img');
-        img.style.animation = 'none';
-        setTimeout(()=>{
-          img.style.animation = '';
-        },10);
+      document.addEventListener('mouseup', () => {
+        if (turretDragging) {
+          turretDragging = false;
+          cursor.classList.remove('grab');
+          
+          // Lancer la tourelle avec physique
+          turretPhysicsActive = true;
+          animateTurretPhysics();
+        }
       });
-    </script>
-  </body>
+    }
+    
+    function animateTurretPhysics() {
+      if (turretDragging || !turretPhysicsActive) return;
+      
+      turretVelX *= friction;
+      turretVelY *= friction;
+      turretVelY += gravity; // Gravité
+      
+      turretX += turretVelX;
+      turretY += turretVelY;
+      
+      // Vérifier téléportation via portail (avec cooldown !)
+      const now = Date.now();
+      if (now - lastTurretTeleport > teleportCooldown) {
+        const turretRect = turret.getBoundingClientRect();
+        const portalHit = checkPortalCollision(turret, turretRect);
+        
+        if (portalHit) {
+          teleportObject(turret, portalHit.target, portalHit.portal === 'orange');
+        }
+      }
+      
+      // Collisions avec les bords
+      const maxX = window.innerWidth - turret.offsetWidth;
+      const maxY = window.innerHeight - turret.offsetHeight;
+      
+      let bounced = false;
+      
+      if (turretX < 0) {
+        turretX = 0;
+        turretVelX *= -bounce;
+        bounced = true;
+      }
+      if (turretX > maxX) {
+        turretX = maxX;
+        turretVelX *= -bounce;
+        bounced = true;
+      }
+      if (turretY < 0) {
+        turretY = 0;
+        turretVelY *= -bounce;
+        bounced = true;
+      }
+      if (turretY > maxY) {
+        turretY = maxY;
+        turretVelY *= -bounce;
+        bounced = true;
+        
+        // Rebonds multiples au sol
+        if (Math.abs(turretVelY) < 2) {
+          turretVelY = 0;
+          turretVelX *= 0.8;
+        }
+      }
+      
+      if (bounced) {
+        turret.classList.add('bouncing');
+        setTimeout(() => turret.classList.remove('bouncing'), 400);
+      }
+      
+      turret.style.left = turretX + 'px';
+      turret.style.top = turretY + 'px';
+      
+      // Continuer l'animation si la tourelle bouge encore
+      if (Math.abs(turretVelX) > 0.1 || Math.abs(turretVelY) > 0.1 || turretY < maxY - 1) {
+        requestAnimationFrame(animateTurretPhysics);
+      } else {
+        // Arrêt complet - remettre l'animation de flottement
+        turretPhysicsActive = false;
+        turret.style.animation = 'turretFloat 3.5s ease-in-out infinite';
+      }
+    }
+  </script>
+</body>
 </html>

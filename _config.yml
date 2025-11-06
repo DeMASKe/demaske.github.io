@@ -12,5 +12,5 @@ plugins:
 markdown: kramdown
 highlighter: rouge
 
-# URL du site (optionnel mais propre)
+# URL du site
 url: "https://demaske.github.io"
